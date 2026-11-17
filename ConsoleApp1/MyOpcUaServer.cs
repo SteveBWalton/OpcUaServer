@@ -9,12 +9,6 @@ using Opc.Ua.Server;
 
 namespace ConsoleApp1
 {
-
-
-
-
-
-
     public class MyOpcUaServer : StandardServer
     {
         public MyOpcUaServer(ITelemetryContext telemetry)
@@ -32,25 +26,4 @@ namespace ConsoleApp1
             return new MasterNodeManager(server, configuration, null, nodeManagers);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

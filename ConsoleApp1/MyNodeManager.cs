@@ -12,24 +12,47 @@ using Opc.Ua.Server;
 
 namespace ConsoleApp1
 {
-
-
-
-
-
     public class MyNodeManager : CustomNodeManager2
     {
-        private BaseDataVariableState temperature;
-        private BaseDataVariableState pressure;
-        private BaseDataVariableState running;
+        #region Member Variables
 
-        private Timer timer;
+        /// <summary>A temperature variable to export via OPC UA.</summary>
+        private BaseDataVariableState _temperature;
+        /// <summary>A pressure variable to export via OPC UA.</summary>
+        private BaseDataVariableState _pressure;
+        /// <summary>A running variable to export via OPC UA.</summary>
+        private BaseDataVariableState _running;
 
+        /// <summary>Timer to change the value of the temperature in time.</summary>
+        private Timer _timer;
+
+        #endregion
+
+        #region Constructors etc
+
+        /// <summary>Constructor.</summary>
+        /// <param name="server">Specifes the OPC UA server that this will manage nodes for.</param>
+        /// <param name="configuration"></param>
         public MyNodeManager(IServerInternal server, ApplicationConfiguration configuration)
             : base(server, configuration, "urn:example:SimpleOpcUaServer:Data")
         {
             SystemContext.NodeIdFactory = this;
         }
+
+        /// <summary>Release the resources used at the end of life for the object.</summary>
+        /// <param name="disposing">Specifies true when the object is really end of life.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _timer?.Dispose();
+                _timer = null;
+            }
+
+            base.Dispose(disposing);
+        }
+
+        #endregion
 
         public override void CreateAddressSpace(IDictionary<NodeId, IList<IReference>> externalReferences)
         {
@@ -56,15 +79,19 @@ namespace ConsoleApp1
                 references.Add(new NodeStateReference(ReferenceTypeIds.Organizes, false, folder.NodeId));
                 folder.AddReference(ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder);
                 AddPredefinedNode(SystemContext, folder);
-                temperature = CreateVariable(folder, "Temperature", 20.0);
-                pressure = CreateVariable(folder, "Pressure", 1.0);
-                running = CreateVariable(folder, "Running", true);
-                timer = new Timer(UpdateValues, null, 1000, 1000);
+                _temperature = createVariable(folder, "Temperature", 20.0);
+                _pressure = createVariable(folder, "Pressure", 1.0);
+                _running = createVariable(folder, "Running", true);
+                _timer = new Timer(updateValues, null, 1000, 1000);
             }
         }
 
-        // private BaseDataVariableState CreateVariable(            NodeState parent,            string name,            object initialValue)
-        private BaseDataVariableState CreateVariable(NodeState parent, string name, Variant initialValue)
+        /// <summary>Create an OPC UA variable with the speciifed name in the specified folder with the specified intial value.</summary>
+        /// <param name="parent">Specifies the folder that contains the new OPC UA variable.</param>
+        /// <param name="name">Specifies the name for the new OPC UA variable.</param>
+        /// <param name="initialValue">Specifies the initial value and the type of the new OPC UA variable.</param>
+        /// <returns>The OPC UA variable created.</returns>
+        private BaseDataVariableState createVariable(NodeState parent, string name, Variant initialValue)
         {
             ushort ns = NamespaceIndexes[0];
 
@@ -92,16 +119,18 @@ namespace ConsoleApp1
             return variable;
         }
 
-        private void UpdateValues(object state)
+        /// <summary>Signal handler for the timer control to update the OPC UA values.</summary>
+        /// <param name="state"></param>
+        private void updateValues(object state)
         {
             lock (Lock)
             {
-                if (temperature == null)
+                if (_temperature == null)
                 {
                     return;
                 }
 
-                double value = Convert.ToDouble(temperature.Value.ToString());
+                double value = Convert.ToDouble(_temperature.Value.ToString());
 
                 value += 0.1;
 
@@ -110,45 +139,12 @@ namespace ConsoleApp1
                     value = 20.0;
                 }
 
-                temperature.Value = value;
-                temperature.Timestamp = DateTime.UtcNow;
+                _temperature.Value = value;
+                _temperature.Timestamp = DateTime.UtcNow;
 
-                temperature.ClearChangeMasks(SystemContext, false);
+                _temperature.ClearChangeMasks(SystemContext, false);
             }
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                timer?.Dispose();
-                timer = null;
-            }
-
-            base.Dispose(disposing);
-        }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
