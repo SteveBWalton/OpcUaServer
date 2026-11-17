@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ConsoleApp1/ConsoleApp1.csproj" Id="8cc58df7-eb64-4acb-84ef-ab916ba072d7" />
+  <Project Path="OPCUAServerTest/OPCUAServerTest.csproj" Id="5d6ded70-e0f2-4506-8814-5b8c05f18fc4">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
+</Solution>

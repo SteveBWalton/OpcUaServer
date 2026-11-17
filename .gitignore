@@ -1,0 +1,6 @@
+#
+# Ignore these folders.
+#
+.vs/
+[Bb]in/
+[Oo]bj/
