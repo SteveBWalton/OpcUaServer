@@ -20,7 +20,8 @@ namespace ConsoleApp1
             ITelemetryContext telemetry = DefaultTelemetry.Create(builder => { });
 
             // Create the OPC UA application.
-            var application = new ApplicationInstance(telemetry)
+            // var application = new ApplicationInstance(telemetry)
+            ApplicationInstance application = new ApplicationInstance(telemetry)
             {
                 ApplicationName = "SimpleOpcUaServer",
                 ApplicationType = ApplicationType.Server
@@ -42,7 +43,8 @@ namespace ConsoleApp1
             }
 
             // This starts the OPC UA server aysnchronously.
-            var server = new MyOpcUaServer(telemetry);
+            // var server = new MyOpcUaServer(telemetry);
+            MyOpcUaServer server = new MyOpcUaServer(telemetry);
             await application.StartAsync(server);
 
             // Write a message to the console.
