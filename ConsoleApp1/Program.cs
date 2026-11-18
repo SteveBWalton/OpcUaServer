@@ -36,22 +36,24 @@ namespace ConsoleApp1
                 .CreateAsync();
 
             bool isCertificateOK = await application.CheckApplicationInstanceCertificatesAsync(true);
-
             if (!isCertificateOK)
             {
                 throw new Exception("Application certificate validation failed.");
             }
 
+            // This starts the OPC UA server aysnchronously.
             var server = new MyOpcUaServer(telemetry);
-
             await application.StartAsync(server);
 
+            // Write a message to the console.
             Console.WriteLine("OPC UA server started.");
             Console.WriteLine("opc.tcp://localhost:4840/SimpleOpcUaServer");
             Console.WriteLine("Press Enter to stop.");
 
+            // Wait for user input on the console.
             Console.ReadLine();
 
+            // Stop the aysnchronous OPC UA server.
             await application.StopAsync();
         }
     }
