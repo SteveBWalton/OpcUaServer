@@ -9,7 +9,8 @@ using Opc.Ua.Server;
 
 namespace ConsoleApp1
 {
-    // Class to represent the OPC UA Server.
+    /// <summary>Class to represent the OPC UA Server.</summary>
+    /// <remarks>Really the only difference to a StandardServer is our custom node manager to add our folders and variables.</remarks>
     public class MyOpcUaServer : StandardServer
     {
         /// <summary>Constructor.</summary>

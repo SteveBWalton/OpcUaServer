@@ -12,6 +12,8 @@ using Opc.Ua.Server;
 
 namespace ConsoleApp1
 {
+    /// <summary>Class to represent a node manager for the OPC UA server.</summary>
+    /// <remarks>This adds folders and variable to the server.</remarks>
     public class MyNodeManager : CustomNodeManager2
     {
         #region Member Variables
@@ -60,7 +62,8 @@ namespace ConsoleApp1
             {
                 ushort ns = NamespaceIndexes[0];
 
-                var folder = new FolderState(null)
+                // Create a folder to hold the variables.
+                FolderState folder = new FolderState(null)
                 {
                     SymbolicName = "MyDevice",
                     NodeId = new NodeId("MyDevice", ns),
@@ -86,7 +89,7 @@ namespace ConsoleApp1
             }
         }
 
-        /// <summary>Create an OPC UA variable with the speciifed name in the specified folder with the specified intial value.</summary>
+        /// <summary>Create an OPC UA variable with the speciifed name in the specified folder with the specified initial value.</summary>
         /// <param name="parent">Specifies the folder that contains the new OPC UA variable.</param>
         /// <param name="name">Specifies the name for the new OPC UA variable.</param>
         /// <param name="initialValue">Specifies the initial value and the type of the new OPC UA variable.</param>
